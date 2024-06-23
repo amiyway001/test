@@ -13,13 +13,16 @@ def index():
 @app.route('/search', methods=['POST'])
 def search():
     query = request.form['query']
+    
     nav = request.form['nav']
     results = []
     if nav == 'darkweb':
         results = darkweb.search_darkweb(query)
+    
     elif nav == 'surfaceweb':
         results = surfaceweb.search_surfaceweb(query)
     
+    print(results)
     return render_template('index.html', results=results, query=query, nav=nav)
 
 

@@ -1,9 +1,9 @@
 from serpapi import GoogleSearch
 
 def search_surfaceweb(query):
-    def perform_search(q):
+    
         params = {
-            "q": q,
+            "q": query,
             "hl": "en",
             "gl": "us",
             "google_domain": "google.com",
@@ -13,8 +13,7 @@ def search_surfaceweb(query):
         search = GoogleSearch(params)
         results = search.get_dict()
 
-        for result in results["organic_results"]:
-            print(result["link"])
-        
-            
-    perform_search(query)
+    
+        links = [result["link"] for result in results["organic_results"]]
+
+        return links
