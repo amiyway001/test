@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Index</title>
+</head>
+<body>
+    <h1>Search Index</h1>
+    <form action="/search" method="post">
+        <label for="nav">Choose a search type:</label>
+        <select id="nav" name="nav">
+            <option value="surfaceweb">Surface Web</option>
+            <option value="darkweb">Dark Web</option>
+        </select>
+        <br>
+        <label for="query">Search Query:</label>
+        <input type="text" id="query" name="query" required>
+        <br>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if results %}
+        <div id="results-container">
+            <h2>Results for "{{ query }}" in {{ nav }}:</h2>
+            {% for result in results %}
+                <a href="{{ result }}">{{ result }}</a>
+                <br>
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>
