@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dark Web & Surface Web Search</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<script src="script.js"></script>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#" id="darkweb-nav">Dark Web</a></li>
+            <li><a href="#" id="surfaceweb-nav">Surface Web</a></li>
+        </ul>
+    </nav>
+    <div id="search-container">
+        <input type="search" id="search-input" placeholder="Search...">
+        <button id="search-button">Search</button>
+    </div>
+    <div id="results-container">
+        <!-- Results will be displayed here -->
+    </div>
+    <div id="canvas-container">
+        <!-- Canvas will be displayed here -->
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search-button').click(function () {
+                var query = $('#search-input').val();
+                var nav = $('nav li.active').attr('id');
+                $.ajax({
+                    type: 'GET',
+                    url: '/search',
+                    data: { q: query, nav: nav },
+                    success: function (data) {
+                        $('#results-container').html('');
+                        $.each(data.results, function (index, result) {
+                            $('#results-container').append('<p><a href="' + result.link + '">' + result.title + '</a></p>');
+                            // Add link to canvas
+                            $.ajax({
+                                type: 'POST',
+                                url: '/add_link',
+                                data: { link: result.link },
+                                success: function (data) {
+                                    console.log('Link added to canvas');
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
