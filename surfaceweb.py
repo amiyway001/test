@@ -1,12 +1,6 @@
 from serpapi import GoogleSearch
-from bs4 import BeautifulSoup
 
-def search_surfaceweb():
-    def get_user_input():
-        q = input("Enter search query: ")
-
-        return q
-
+def search_surfaceweb(query):
     def perform_search(q):
         params = {
             "q": q,
@@ -20,13 +14,7 @@ def search_surfaceweb():
         results = search.get_dict()
 
         for result in results["organic_results"]:
-            link = result["link"]
-            title = result["title"]
-            print(f"Title: {title}, Link: {link}")
-
-    if __name__ == "__main__":
-        q = get_user_input()
-        perform_search(q)
-
-
-search_surfaceweb()
+            print(result["link"])
+        
+            
+    perform_search(query)

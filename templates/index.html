@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#" id="darkweb-nav" class="nav-link">Dark Web</a></li>
+            <li><a href="#" id="surfaceweb-nav" class="nav-link">Surface Web</a></li>
+        </ul>
+    </nav>
+    <div id="search-container">
+    
+    <form action="/search" method="post">
+        <input type="search" id="search-input" name="query" placeholder="Search...">
+        <div>
+            <input type="radio" id="darkweb" name="nav" value="darkweb">
+            <label for="darkweb">Dark Web</label>
+            <input type="radio" id="surfaceweb" name="nav" value="surfaceweb" checked>
+            <label for="surfaceweb">Surface Web</label>
+        </div>
+        <button type="submit" id="search-button">Search</button>
+    </form>
+    </div>
+    <div id="results-container">
+        {% for result in results %}
+            <div>{{ result }}</div>
+        {% endfor %}
+    </div>
+    <div id="canvas-container">
+        <!-- Canvas will be displayed here -->
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.nav-link').click(function (e) {
+                e.preventDefault();
+                $('.nav-link').removeClass('active');
+                $(this).addClass('active');
+            });
+    
+            // Use form submit event instead of button click to ensure all form data is captured, including radio button state
+            $('#search-container form').submit(function (e) {
+                e.preventDefault(); // Prevent the default form submission
+                var query = $('#search-input').val();
+                var nav = $('input[name="nav"]:checked').val(); // Get the value of the checked radio button for "nav"
+                    
+            $.ajax({
+                type: 'POST', // Correctly using POST
+                url: '/search',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Set content type for form data
+                data: 'query=' + encodeURIComponent(query) + '&nav=' + encodeURIComponent(nav), // Encode data as form data
+                success: function (response) {
+                    $('#results-container').html('');
+                    $.each(response.results, function (index, result) {
+                        $('#results-container').append('<p><a href="' + result.link + '">' + result.title + '</a></p>');
+                        // Add link to canvas
+                        $.ajax({
+                            type: 'POST',
+                            url: '/add_link',
+                            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Ensure content type is set for form data
+                            data: 'link=' + encodeURIComponent(result.link), // Encode link as form data
+                            success: function (response) {
+                                console.log('Link added to canvas');
+                            }
+                        });
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + status + " " + error);
+                }
+            });
+            });
+        });
+    </script>
+</body>
+</html>

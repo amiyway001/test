@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+nav {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav li {
+    margin-right: 20px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #ccc;
+}
+
+#search-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#search-input {
+    width: 50%;
+   padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#search-button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#search-button:hover {
+    background-color: #3e8e41;
+}
+
+#results-container {
+    margin-top: 20px;
+}
+
+#canvas-container {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+canvas {
+    border: 1px solid #ccc;
+}
+
+/* Note that this is just a basic structure and you will need to modify the CSS to fit your specific needs.
+
+**Next Steps:**
+
+1. Implement the Dark Web and Surface Web search functionality in `darkweb.py` and `surfaceweb.py` respectively.
+2. Modify the `canvas.js` file to handle adding links to the canvas correctly.
+3. Add event listeners to the search button and results container to handle user input and display results.
+4. Style the website using CSS to make it visually appealing.
+
+I hope this helps! Let me know if you have any questions or need further assistance. */

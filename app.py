@@ -1,22 +1,27 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
+
 import darkweb
 import surfaceweb
 
 app = Flask(__name__)
 
-@app.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('q')
-    nav = request.args.get('nav')
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/search', methods=['POST'])
+def search():
+    query = request.form['query']
+    nav = request.form['nav']
+    results = []
     if nav == 'darkweb':
         results = darkweb.search_darkweb(query)
     elif nav == 'surfaceweb':
         results = surfaceweb.search_surfaceweb(query)
-    else:
-        return jsonify({'error': 'Invalid navigation'}), 400
+    
+    return render_template('index.html', results=results, query=query, nav=nav)
 
-    return jsonify({'results': results})
 
 @app.route('/add_link', methods=['POST'])
 def add_link():
