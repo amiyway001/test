@@ -4,30 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Index</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Search Container Styles */
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            max-width: 600px;
+        }
+        
+        .search-form {
+            padding: 20px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .search-button {
+            background-color: #337ab7;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .search-button:hover {
+            background-color: #23527c;
+        }
+        
+        /* Results Container Styles */
+        .results-container {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        
+        .results-container h2 {
+            margin-top: 0;
+            color: #337ab7;
+        }
+        
+        .result {
+            margin-bottom: 10px;
+        }
+        
+        .result a {
+            color: #337ab7;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        
+        .result a:hover {
+            color: #23527c;
+        }
+    </style>
 </head>
 <body>
-    <h1>Search Index</h1>
-    <form action="/search" method="post">
-        <label for="nav">Choose a search type:</label>
-        <select id="nav" name="nav">
-            <option value="surfaceweb">Surface Web</option>
-            <option value="darkweb">Dark Web</option>
-        </select>
-        <br>
-        <label for="query">Search Query:</label>
-        <input type="text" id="query" name="query" required>
-        <br>
-        <button type="submit">Search</button>
-    </form>
-
-    {% if results %}
-        <div id="results-container">
-            <h2>Results for "{{ query }}" in {{ nav }}:</h2>
-            {% for result in results %}
-                <a href="{{ result }}">{{ result }}</a>
-                <br>
-            {% endfor %}
-        </div>
-    {% endif %}
+    <div class="search-container">
+        <h1>Search Index</h1>
+        <form class="search-form" action="/search" method="post">
+            <label for="nav">Search Type:</label>
+            <select id="nav" name="nav">
+                <option value="surfaceweb">Surface Web</option>
+                <option value="darkweb">Dark Web</option>
+            </select>
+            <br>
+            <input type="text" id="query" name="query" class="search-input" required placeholder="Search Query...">
+            <br>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        
+        {% if results %}
+            <div class="results-container">
+                <h2>Results for "{{ query }}" in {{ nav }}:</h2>
+                {% for result in results %}
+                    <div class="result">
+                        <a href="{{ result }}">{{ result }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
