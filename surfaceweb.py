@@ -7,7 +7,7 @@ def search_surfaceweb(query):
             "hl": "en",
             "gl": "us",
             "google_domain": "google.com",
-            "api_key": "ca57420ba8d67a1aa3ba3704ddeae271bbaa2ccd68110b1849ec94dc979724fd"
+            "api_key": "44badf285bae0256ec5c3ce7433dc4d0b9b0022a15594bf50336674d2d63eb27"
         }
 
         search = GoogleSearch(params)
