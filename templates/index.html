@@ -8,34 +8,35 @@
         /* Global Styles */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
+            background-color: #f0f2f5;
             margin: 0;
             padding: 0;
         }
-        
+
         /* Search Container Styles */
         .search-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 60px;
-            background-color: #fff;
-            border: 1px solid #ddd;
+            background: linear-gradient(135deg, #6b73ff, #000dff);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             margin: 40px auto;
             max-width: 600px;
+            color: #fff;
         }
-        
+
         .search-form {
             padding: 20px;
-            background-color: #f2f2f2;
-            border: 1px solid #ccc;
+            background-color: #fff;
             border-radius: 10px;
             margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
-        
-        .search-input {
+
+        .search-input, .search-form select {
             width: 100%;
             height: 40px;
             margin-bottom: 20px;
@@ -44,8 +45,9 @@
             border-radius: 5px;
             font-size: 18px;
             color: #666;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
+
         .search-button {
             background-color: #337ab7;
             color: #fff;
@@ -54,66 +56,163 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
+            transition: background-color 0.3s;
+            width: 100%;
         }
-        
+
         .search-button:hover {
             background-color: #23527c;
         }
-        
+
         /* Results Container Styles */
         .results-container {
             margin-top: 40px;
             padding: 20px;
-            background-color: #f7f7f7;
+            background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
-        
+
         .results-container h2 {
             margin-top: 0;
             color: #337ab7;
         }
-        
+
         .result {
             margin-bottom: 10px;
         }
-        
+
         .result a {
             color: #337ab7;
             text-decoration: none;
             font-size: 18px;
+            transition: color 0.3s;
         }
-        
+
         .result a:hover {
             color: #23527c;
         }
+
+        /* jsPlumb styles */
+        .item {
+            width: 120px;
+            height: 120px;
+            border: 2px solid #337ab7;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px;
+            background: linear-gradient(135deg, #f0f2f5, #fff);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Label styles */
+        .label {
+            color: #fff;
+            background-color: #337ab7;
+            padding: 3px 7px;
+            border-radius: 3px;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.6/js/jsplumb.min.js"></script>
 </head>
 <body>
     <div class="search-container">
         <h1>Search Index</h1>
-        <form class="search-form" action="/search" method="post">
+        <form id="searchForm" class="search-form" action="/search" method="post">
             <label for="nav">Search Type:</label>
             <select id="nav" name="nav">
                 <option value="surfaceweb">Surface Web</option>
                 <option value="darkweb">Dark Web</option>
             </select>
-            <br>
             <input type="text" id="query" name="query" class="search-input" required placeholder="Search Query...">
-            <br>
             <button type="submit" class="search-button">Search</button>
         </form>
-        
-        {% if results %}
-            <div class="results-container">
-                <h2>Results for "{{ query }}" in {{ nav }}:</h2>
-                {% for result in results %}
-                    <div class="result">
-                        <a href="{{ result }}">{{ result }}</a>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+
+        <div id="resultsContainer" class="results-container" style="display: none;">
+            <h2>Results for "<span id="queryText"></span>" in <span id="navText"></span>:</h2>
+            <div id="results" class="jsplumb-container" style="display: flex; flex-wrap: wrap; justify-content: center; position: relative;"></div>
+        </div>
     </div>
+
+    <script>
+        jsPlumb.ready(function() {
+            const instance = jsPlumb.getInstance({
+                Connector: ["Bezier", { curviness: 50 }],
+                PaintStyle: { stroke: "#337ab7", strokeWidth: 2 },
+                Endpoint: ["Dot", { radius: 5 }],
+                EndpointStyle: { fill: "#337ab7" },
+                Container: "results"
+            });
+
+            document.getElementById('searchForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const query = document.getElementById('query').value;
+                const nav = document.getElementById('nav').value;
+                const results = [
+                    //make changes for result here
+                    "result 1",
+                    "result 2"
+                ];
+
+                const resultsContainer = document.getElementById('resultsContainer');
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = "";
+                resultsContainer.style.display = 'block';
+                document.getElementById('queryText').textContent = query;
+                document.getElementById('navText').textContent = nav;
+
+                const elements = results.map((result, index) => {
+                    const item = document.createElement('div');
+                    item.id = `item${index + 1}`;
+                    item.className = 'item result';
+                    const link = document.createElement('a');
+                    link.href = result;
+                    link.textContent = `Result ${index + 1}`;
+                    item.appendChild(link);
+                    resultsDiv.appendChild(item);
+                    return item.id;
+                });
+
+                instance.reset();
+
+
+                elements.forEach(element => instance.draggable(element));
+
+                // Connecting items
+                for (let i = 0; i < elements.length - 1; i++) {
+                    instance.connect({
+                        source: elements[i],
+                        target: elements[i + 1],
+                        anchors: ["Right", "Left"],
+                        overlays: [
+                            ["Label", { label: `Connection ${i + 1}-${i + 2}`, location: 0.5, cssClass: "label" }]
+                        ]
+                    });
+                }
+
+                if (elements.length > 2) {
+                    instance.connect({
+                        source: elements[elements.length - 1],
+                        target: elements[0],
+                        anchors: ["Right", "Left"],
+                        overlays: [
+                            ["Label", { label: `Connection ${elements.length}-1`, location: 0.5, cssClass: "label" }]
+                        ]
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
